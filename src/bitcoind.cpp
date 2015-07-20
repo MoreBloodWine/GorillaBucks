@@ -7,6 +7,7 @@
 #include "rpcclient.h"
 #include "init.h"
 #include <boost/algorithm/string/predicate.hpp>
+#include "masternodeconfig.h"
 
 void WaitForShutdown(boost::thread_group* threadGroup)
 {
@@ -60,6 +61,13 @@ bool AppInit(int argc, char* argv[])
             strUsage += "\n" + HelpMessage();
 
             fprintf(stdout, "%s", strUsage.c_str());
+            return false;
+        }
+
+        // parse masternode.conf
+        std::string strErr;
+        if(!masternodeConfig.read(strErr)) {
+            fprintf(stderr,"Error reading masternode configuration file: %s\n", strErr.c_str());
             return false;
         }
 
