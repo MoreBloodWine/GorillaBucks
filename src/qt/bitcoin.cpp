@@ -19,6 +19,7 @@
 #ifdef Q_OS_MAC
 #include "macdockiconhandler.h"
 #endif
+#include "masternodeconfig.h"
 
 #include <QMessageBox>
 #include <QTextCodec>
@@ -166,6 +167,14 @@ int main(int argc, char *argv[])
         return 1;
     }
     ReadConfigFile(mapArgs, mapMultiArgs);
+
+    // ... then masternode.conf
+    string strErr;
+    if(!masternodeConfig.read(strErr)) {
+        QMessageBox::critical(0, "GorillaBucks",
+                              QString("Error reading masternode configuration file: %1").arg(strErr.c_str()));
+        return 1;
+    }
 
     // Application identification (must be set before OptionsModel is initialized,
     // as it is used to locate QSettings)
